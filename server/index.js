@@ -1,4 +1,4 @@
-// server.js - Optimized for deployment
+// index.js - Optimized for deployment
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
@@ -167,4 +167,7 @@ const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Server accessible at http://localhost:${PORT}`);
+  console.log(`WebSocket server ready at ws://localhost:${PORT}`);
+  console.log(`HTTP endpoint available at http://localhost:${PORT}/update`);
 });
