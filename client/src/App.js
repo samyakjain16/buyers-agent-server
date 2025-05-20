@@ -63,7 +63,7 @@ const ALL_STAGES = [
 
 function App() {
   // WebSocket server URL - adjust as needed
-  const WS_URL = process.env.REACT_APP_WS_URL || 'ws://localhost:3001';
+const WS_URL = 'wss://buyers-agent-server.onrender.com';
   
   // Use WebSocket hook
   const { data, connected} = useWebSocket(WS_URL, initialData);
