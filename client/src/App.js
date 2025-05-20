@@ -63,7 +63,7 @@ const ALL_STAGES = [
 
 function App() {
   // WebSocket server URL - adjust as needed
-const WS_URL = 'wss://buyers-agent-dashboard.up.railway.app';
+const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
   
   // Use WebSocket hook
   const { data, connected} = useWebSocket(WS_URL, initialData);
