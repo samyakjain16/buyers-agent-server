@@ -12,13 +12,15 @@ const useWebSocket = (url, initialData) => {
       const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (savedData) {
         try {
-          return JSON.parse(savedData);
+          const parsedData = JSON.parse(savedData);
+          // Handle both array and object formats
+          return Array.isArray(parsedData) ? parsedData[0] : parsedData;
         } catch (e) {
           console.error('Failed to parse saved data:', e);
         }
       }
     }
-    return initialData; // This can be null now
+    return initialData;
   });
   
   const [connected, setConnected] = useState(false);
@@ -73,20 +75,30 @@ const useWebSocket = (url, initialData) => {
         ws.onerror = (error) => {
           addMessage(`Connection error`);
           console.error('WebSocket error:', error);
-          // Don't attempt to reconnect here, let onclose handle it
         };
         
         ws.onmessage = (event) => {
           try {
             const receivedData = JSON.parse(event.data);
+            console.log('Raw received data:', receivedData);
+            
+            // Handle array format from n8n
+            let processedData;
+            if (Array.isArray(receivedData)) {
+              processedData = receivedData[0]; // Take the first element if it's an array
+            } else {
+              processedData = receivedData;
+            }
+            
+            console.log('Processed data:', processedData);
             addMessage('Received update from server');
             
             // Save data to localStorage for persistence
             if (isBrowser) {
-              localStorage.setItem(LOCAL_STORAGE_KEY, event.data);
+              localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(processedData));
             }
             
-            setData(receivedData);
+            setData(processedData);
           } catch (error) {
             addMessage(`Error parsing data: ${error.message}`);
             console.error('Error parsing WebSocket message:', error);

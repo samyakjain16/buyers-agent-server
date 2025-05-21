@@ -12,7 +12,7 @@ const ALL_STAGES = [
   "Dual Occ site",
   "Offer Acceptance",
   "Unconditional",
-  "Pre-Settlement"
+  "Pre- Settlement"
 ];
 
 function App() {
