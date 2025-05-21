@@ -1,7 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
 
+const LOCAL_STORAGE_KEY = 'buyersAgentDashboardData';
+
 const useWebSocket = (url, initialData) => {
-  const [data, setData] = useState(initialData);
+  // Try to load data from localStorage first, fall back to initialData
+  const [data, setData] = useState(() => {
+    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedData) {
+      try {
+        return JSON.parse(savedData);
+      } catch (e) {
+        console.error('Failed to parse saved data:', e);
+      }
+    }
+    return initialData;
+  });
+  
   const [connected, setConnected] = useState(false);
   const [messages, setMessages] = useState([]);
   const wsRef = useRef(null);
@@ -58,6 +72,10 @@ const useWebSocket = (url, initialData) => {
           try {
             const receivedData = JSON.parse(event.data);
             addMessage('Received update from server');
+            
+            // Save data to localStorage for persistence
+            localStorage.setItem(LOCAL_STORAGE_KEY, event.data);
+            
             setData(receivedData);
           } catch (error) {
             addMessage(`Error parsing data: ${error.message}`);

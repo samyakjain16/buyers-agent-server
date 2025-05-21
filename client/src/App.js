@@ -6,60 +6,6 @@ import ClientStagesChart from './components/ClientStagesChart';
 import TeamOverview from './components/TeamOverview';
 import HeatmapTable from './components/HeatmapTable';
 
-// Sample initial data
-const initialData = {
-  agentData: [
-    {
-      name: "Sam Black",
-      activeClients: 18,
-      capacity: 60.00,
-      clientStages: [
-        { name: "New Clients", clients: 4 },
-        { name: "Set & Forget", clients: 5 },
-        { name: "Dual Occ site", clients: 2 },
-        { name: "Offer Acceptance", clients: 1 },
-        { name: "Unconditional", clients: 2 },
-        { name: "Pre-Settlement", clients: 4 }
-      ]
-    },
-    {
-      name: "Jess Lee",
-      activeClients: 23,
-      capacity: 95.00,
-      clientStages: [
-        { name: "New Clients", clients: 8 },
-        { name: "Set & Forget", clients: 6 },
-        { name: "Dual Occ site", clients: 4 },
-        { name: "Offer Acceptance", clients: 3 },
-        { name: "Unconditional", clients: 1 },
-        { name: "Pre-Settlement", clients: 2 }
-      ]
-    },
-    {
-      name: "Alex Morgan",
-      activeClients: 13,
-      capacity: 40.00,
-      clientStages: [
-        { name: "New Clients", clients: 2 },
-        { name: "Set & Forget", clients: 2 },
-        { name: "Dual Occ site", clients: 2 },
-        { name: "Offer Acceptance", clients: 2 },
-        { name: "Unconditional", clients: 2 },
-        { name: "Pre-Settlement", clients: 1 }
-      ]
-    }
-  ]
-};
-
-// Define all stages
-const ALL_STAGES = [
-  "New Clients",
-  "Set & Forget",
-  "Dual Occ site",
-  "Offer Acceptance",
-  "Unconditional",
-  "Pre-Settlement"
-];
 
 function App() {
   // WebSocket server URL - adjust as needed

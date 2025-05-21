@@ -22,12 +22,15 @@ let latestData = {};
 // Track connected clients
 let connectedClients = 0;
 
-// Handle WebSocket connections
 wss.on('connection', (ws) => {
   connectedClients++;
   console.log(`Client connected. Total connections: ${connectedClients}`);
   
-  // Removed initial data send: ws.send(JSON.stringify(latestData));
+  // Send the latest data to newly connected client
+  // Only send if we already have data (latestData is not empty)
+  if (Object.keys(latestData).length > 0) {
+    ws.send(JSON.stringify(latestData));
+  }
   
   // Handle disconnection
   ws.on('close', () => {
