@@ -1,4 +1,3 @@
-// index.js - Optimized for deployment
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
@@ -18,49 +17,7 @@ app.use(cors());
 const wss = new WebSocket.Server({ server });
 
 // Store latest data received from n8n
-let latestData = {
-  agentData: [
-    {
-      name: "Sam Black",
-      activeClients: 18,
-      capacity: 60.00,
-      clientStages: [
-        { name: "New Clients", clients: 4 },
-        { name: "Set & Forget", clients: 5 },
-        { name: "Dual Occ site", clients: 2 },
-        { name: "Offer Acceptance", clients: 1 },
-        { name: "Unconditional", clients: 2 },
-        { name: "Pre- Settlement", clients: 4 }
-      ]
-    },
-    {
-      name: "Jess Lee",
-      activeClients: 23,
-      capacity: 95.00,
-      clientStages: [
-        { name: "New Clients", clients: 8 },
-        { name: "Set & Forget", clients: 6 },
-        { name: "Dual Occ site", clients: 4 },
-        { name: "Offer Acceptance", clients: 3 },
-        { name: "Unconditional", clients: 1 },
-        { name: "Pre- Settlement", clients: 2 }
-      ]
-    },
-    {
-      name: "Alex Morgan",
-      activeClients: 13,
-      capacity: 40.00,
-      clientStages: [
-        { name: "New Clients", clients: 2 },
-        { name: "Set & Forget", clients: 2 },
-        { name: "Dual Occ site", clients: 2 },
-        { name: "Offer Acceptance", clients: 2 },
-        { name: "Unconditional", clients: 2 },
-        { name: "Pre-Settlement", clients: 1 }
-      ]
-    }
-  ]
-};
+let latestData = {};
 
 // Track connected clients
 let connectedClients = 0;
@@ -70,8 +27,7 @@ wss.on('connection', (ws) => {
   connectedClients++;
   console.log(`Client connected. Total connections: ${connectedClients}`);
   
-  // Send initial data immediately
-  ws.send(JSON.stringify(latestData));
+  // Removed initial data send: ws.send(JSON.stringify(latestData));
   
   // Handle disconnection
   ws.on('close', () => {
