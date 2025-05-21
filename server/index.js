@@ -30,7 +30,7 @@ let latestData = {
         { name: "Dual Occ site", clients: 2 },
         { name: "Offer Acceptance", clients: 1 },
         { name: "Unconditional", clients: 2 },
-        { name: "Pre-Settlement", clients: 4 }
+        { name: "Pre- Settlement", clients: 4 }
       ]
     },
     {
@@ -43,7 +43,7 @@ let latestData = {
         { name: "Dual Occ site", clients: 4 },
         { name: "Offer Acceptance", clients: 3 },
         { name: "Unconditional", clients: 1 },
-        { name: "Pre-Settlement", clients: 2 }
+        { name: "Pre- Settlement", clients: 2 }
       ]
     },
     {
