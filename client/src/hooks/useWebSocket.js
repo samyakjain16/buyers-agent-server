@@ -2,18 +2,23 @@ import { useState, useEffect, useRef } from 'react';
 
 const LOCAL_STORAGE_KEY = 'buyersAgentDashboardData';
 
+// Safe way to check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
+
 const useWebSocket = (url, initialData) => {
-  // Try to load data from localStorage first, fall back to initialData
+  // Try to load data from localStorage only in browser environment
   const [data, setData] = useState(() => {
-    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (savedData) {
-      try {
-        return JSON.parse(savedData);
-      } catch (e) {
-        console.error('Failed to parse saved data:', e);
+    if (isBrowser) {
+      const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedData) {
+        try {
+          return JSON.parse(savedData);
+        } catch (e) {
+          console.error('Failed to parse saved data:', e);
+        }
       }
     }
-    return initialData;
+    return initialData; // This can be null now
   });
   
   const [connected, setConnected] = useState(false);
@@ -34,6 +39,9 @@ const useWebSocket = (url, initialData) => {
   };
 
   useEffect(() => {
+    // Only run WebSocket connection in browser environment
+    if (!isBrowser) return;
+    
     const connectWebSocket = () => {
       try {
         // Close existing connection if any
@@ -74,7 +82,9 @@ const useWebSocket = (url, initialData) => {
             addMessage('Received update from server');
             
             // Save data to localStorage for persistence
-            localStorage.setItem(LOCAL_STORAGE_KEY, event.data);
+            if (isBrowser) {
+              localStorage.setItem(LOCAL_STORAGE_KEY, event.data);
+            }
             
             setData(receivedData);
           } catch (error) {

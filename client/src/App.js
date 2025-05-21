@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import useWebSocket from './hooks/useWebSocket';
 import AgentCapacity from './components/AgentCapacity';
@@ -6,13 +5,22 @@ import ClientStagesChart from './components/ClientStagesChart';
 import TeamOverview from './components/TeamOverview';
 import HeatmapTable from './components/HeatmapTable';
 
+// Define all stages
+const ALL_STAGES = [
+  "New Clients",
+  "Set & Forget",
+  "Dual Occ site",
+  "Offer Acceptance",
+  "Unconditional",
+  "Pre-Settlement"
+];
 
 function App() {
   // WebSocket server URL - adjust as needed
-const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
+  const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
   
-  // Use WebSocket hook
-  const { data, connected} = useWebSocket(WS_URL, initialData);
+  // Use WebSocket hook with no initial data
+  const { data, connected } = useWebSocket(WS_URL, null);
   
   // State to track which agent is selected
   const [selectedAgent, setSelectedAgent] = useState(null);
@@ -30,6 +38,46 @@ const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
   const selectedAgentData = data && data.agentData && selectedAgent ? 
     data.agentData.find(agent => agent.name === selectedAgent) : null;
   
+  // Helper function to check if we have valid data
+  const hasData = data && data.agentData && data.agentData.length > 0;
+  
+  // If no data is available, show a message
+  if (!hasData && !connected) {
+    return (
+      <div className="dashboard-container bg-gray-50">
+        <div className="dashboard-header flex justify-between items-center">
+          <h1 className="text-2xl font-bold">BUYERS AGENT DASHBOARD</h1>
+          <div className="flex items-center">
+            <span className="status-indicator status-red"></span>
+            <span>Disconnected</span>
+          </div>
+        </div>
+        <div className="card flex items-center justify-center" style={{ height: "300px" }}>
+          <p className="text-xl text-gray-500">Connecting to server...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // If connected but no data available, show a message
+  if (!hasData && connected) {
+    return (
+      <div className="dashboard-container bg-gray-50">
+        <div className="dashboard-header flex justify-between items-center">
+          <h1 className="text-2xl font-bold">BUYERS AGENT DASHBOARD</h1>
+          <div className="flex items-center">
+            <span className="status-indicator status-green"></span>
+            <span>Connected</span>
+          </div>
+        </div>
+        <div className="card flex items-center justify-center" style={{ height: "300px" }}>
+          <p className="text-xl text-gray-500">No data available</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Regular rendering with data
   return (
     <div className="dashboard-container bg-gray-50">
       <div className="dashboard-header flex justify-between items-center">
@@ -43,7 +91,7 @@ const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
       {/* Agent Capacity Section */}
       <div className="mb-6">
         <AgentCapacity 
-          agents={data && data.agentData ? data.agentData : []} 
+          agents={data.agentData} 
           selectedAgent={selectedAgent} 
           onSelectAgent={setSelectedAgent} 
         />
@@ -59,12 +107,12 @@ const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
         
         {/* Team Overview */}
         <div className="card">
-          <TeamOverview agents={data && data.agentData ? data.agentData : []} allStages={ALL_STAGES} />
+          <TeamOverview agents={data.agentData} allStages={ALL_STAGES} />
         </div>
         
         {/* Heatmap Table */}
         <div className="card col-span-1 lg:col-span-2">
-          <HeatmapTable agents={data && data.agentData ? data.agentData : []} allStages={ALL_STAGES} />
+          <HeatmapTable agents={data.agentData} allStages={ALL_STAGES} />
         </div>
       </div>
       
