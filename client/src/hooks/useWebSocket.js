@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 
-const LOCAL_STORAGE_KEY = 'buyersAgentDashboardData';
-
 // Safe way to check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
 
-const useWebSocket = (url, initialData) => {
+const useWebSocket = (url, initialData, location = 'default') => {
+  // Create location-specific storage key
+  const LOCAL_STORAGE_KEY = `buyersAgentDashboardData_${location}`;
+  
   // Try to load data from localStorage only in browser environment
   const [data, setData] = useState(() => {
     if (isBrowser) {
@@ -13,7 +14,6 @@ const useWebSocket = (url, initialData) => {
       if (savedData) {
         try {
           const parsedData = JSON.parse(savedData);
-          // Handle both array and object formats
           return Array.isArray(parsedData) ? parsedData[0] : parsedData;
         } catch (e) {
           console.error('Failed to parse saved data:', e);
@@ -35,72 +35,66 @@ const useWebSocket = (url, initialData) => {
         message, 
         timestamp: new Date().toLocaleTimeString() 
       }];
-      // Keep only the last 5 messages
       return newMessages.slice(-5);
     });
   };
 
   useEffect(() => {
-    // Only run WebSocket connection in browser environment
-    if (!isBrowser) return;
+    if (!isBrowser || !url) return;
     
     const connectWebSocket = () => {
       try {
-        // Close existing connection if any
         if (wsRef.current && wsRef.current.readyState !== WebSocket.CLOSED) {
           wsRef.current.close();
         }
         
-        addMessage('Attempting to connect...');
+        addMessage(`Attempting to connect to ${location}...`);
         const ws = new WebSocket(url);
         
         ws.onopen = () => {
           setConnected(true);
-          addMessage('Connected to server');
+          addMessage(`Connected to ${location} server`);
         };
         
         ws.onclose = (event) => {
           setConnected(false);
-          addMessage(`Disconnected from server (code: ${event.code})`);
+          addMessage(`Disconnected from ${location} server (code: ${event.code})`);
           
-          // Clear any existing reconnect timeout
           if (reconnectTimeoutRef.current) {
             clearTimeout(reconnectTimeoutRef.current);
           }
           
-          // Try to reconnect after 5 seconds
           reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
         };
         
         ws.onerror = (error) => {
-          addMessage(`Connection error`);
+          addMessage(`${location} connection error`);
           console.error('WebSocket error:', error);
         };
         
         ws.onmessage = (event) => {
           try {
             const receivedData = JSON.parse(event.data);
-            console.log('Raw received data:', receivedData);
+            console.log(`${location} raw received data:`, receivedData);
             
             // Handle array format from n8n
             let processedData;
             if (Array.isArray(receivedData)) {
-              processedData = receivedData[0]; // Take the first element if it's an array
+              processedData = receivedData[0];
             } else {
               processedData = receivedData;
             }
             
-            console.log('Processed data:', processedData);
-            addMessage('Received update from server');
+            console.log(`${location} processed data:`, processedData);
+            addMessage(`Received update from ${location} server`);
             
-            // Save data to localStorage for persistence
             if (isBrowser) {
               localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(processedData));
             }
             
             setData(processedData);
           } catch (error) {
-            addMessage(`Error parsing data: ${error.message}`);
+            addMessage(`Error parsing ${location} data: ${error.message}`);
             console.error('Error parsing WebSocket message:', error);
           }
         };
@@ -109,15 +103,12 @@ const useWebSocket = (url, initialData) => {
       } catch (error) {
         console.error('Error creating WebSocket connection:', error);
         setConnected(false);
-        
-        // Try to reconnect after 5 seconds
         reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
       }
     };
     
     connectWebSocket();
     
-    // Clean up on unmount
     return () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
@@ -127,7 +118,7 @@ const useWebSocket = (url, initialData) => {
         wsRef.current.close();
       }
     };
-  }, [url]);
+  }, [url, location]);
 
   return { data, connected, messages };
 };
