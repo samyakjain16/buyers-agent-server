@@ -39,10 +39,6 @@ const HomePage = ({ onSelectLocation }) => {
         <h2 className="text-2xl font-semibold text-center mb-4 text-gray-700">
           Select Your Location
         </h2>
-        <p className="text-center text-gray-600 mb-12">
-          Each location has its own specialized workflow and client stages
-        </p>
-        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {locations.map((location) => (
             <div
@@ -58,15 +54,8 @@ const HomePage = ({ onSelectLocation }) => {
             >
               <div>
                 <h3 className="text-2xl font-bold mb-4">{location.name}</h3>
-                <p className="text-lg opacity-90 mb-6">{location.description}</p>
                 
                 <div className="space-y-2">
-                  {location.features.map((feature, index) => (
-                    <div key={index} className="flex items-center text-sm opacity-80">
-                      <span className="mr-2">•</span>
-                      <span>{feature}</span>
-                    </div>
-                  ))}
                 </div>
               </div>
               
@@ -77,12 +66,6 @@ const HomePage = ({ onSelectLocation }) => {
               </div>
             </div>
           ))}
-        </div>
-        
-        <div className="mt-12 text-center">
-          <p className="text-gray-500">
-            Each location dashboard is customized for specific market requirements and client journey stages
-          </p>
         </div>
       </div>
     </div>
