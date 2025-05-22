@@ -16,7 +16,7 @@ const NEWCASTLE_STAGES = [
 ];
 
 const NewcastleDashboard = ({ onBack }) => {
-  const WS_URL = 'wss://buyers-agent-newcastle.onrender.com';
+  const WS_URL = 'wss://buyers-agent-dashboard.onrender.com';
   const { data, connected } = useWebSocket(WS_URL, null, 'newcastle');
   const [selectedAgent, setSelectedAgent] = useState(null);
   
