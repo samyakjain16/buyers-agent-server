@@ -18,7 +18,7 @@ const BRISBANE_STAGES = [
 ];
 
 const BrisbaneDashboard = ({ onBack }) => {
-  const WS_URL = 'wss://buyers-agent-brisbane.onrender.com';
+  const WS_URL = 'wss://buyers-agent-brisbane-dashboard.onrender.com';
   const { data, connected } = useWebSocket(WS_URL, null, 'brisbane');
   const [selectedAgent, setSelectedAgent] = useState(null);
   
