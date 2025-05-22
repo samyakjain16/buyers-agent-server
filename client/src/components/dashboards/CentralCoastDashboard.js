@@ -18,7 +18,7 @@ const CENTRAL_COAST_STAGES = [
 ];
 
 const CentralCoastDashboard = ({ onBack }) => {
-  const WS_URL = 'wss://buyers-agent-central-coast.onrender.com';
+  const WS_URL = 'wss://buyers-agent-centralcoast-dashboard.onrender.com';
   const { data, connected } = useWebSocket(WS_URL, null, 'central-coast');
   const [selectedAgent, setSelectedAgent] = useState(null);
   

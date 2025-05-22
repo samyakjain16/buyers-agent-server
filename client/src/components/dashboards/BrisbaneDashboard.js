@@ -7,14 +7,12 @@ import HeatmapTable from '../HeatmapTable';
 
 // Brisbane-specific client stages
 const BRISBANE_STAGES = [
-  "Initial Consultation",
-  "Property Search",
-  "Shortlist Review",
-  "Inspection Scheduled",
-  "Offer Submitted",
-  "Contract Exchange",
-  "Finance Approval",
-  "Settlement"
+  "North - Blair",
+  "South - Firat",
+  "GC and Ipswich - Trent",
+  "Under Contract",
+  "Unconditional",
+  "Pre- Settlement"
 ];
 
 const BrisbaneDashboard = ({ onBack }) => {
